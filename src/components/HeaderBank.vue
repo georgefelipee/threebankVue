@@ -19,8 +19,11 @@ export default defineComponent({
        </div>
 
        <div class="login-information">
-         <span> Sign up</span>
-         <span> Login</span>
+         <span class="paragrafo signup"> Sign Up</span>
+
+         <div class="login">
+           <span class="paragrafo login-link"> Login </span>
+         </div>
        </div>
 
      </div>
@@ -49,6 +52,44 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   gap: 4rem;
+  font-weight: bold;
+}
+.signup{
+  cursor: pointer;
+  color: var(--verde-medio);
+  transition: 0.3s ease;
+}
+
+.signup:hover{
+  border: var(--verde-medio) 1px solid;
+  border-radius: 100px;
+  padding: 15px 20px;
+}
+
+.login-information{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  font-weight: bold;
+}
+.login {
+  cursor: pointer;
+  background-color: var(--verde-medio);
+  border-radius: 100px;
+  padding: 15px 20px;
+  transition: background-color 0.3s ease; /* Transição suave de 0.3 segundos */
+}
+.login-link {
+  color: #FFFFFF; /* Cor do texto branco */
+}
+
+.login:hover {
+  background-color: #FFFFFF; /* Mudando para branco quando hover */
+  border: var(--verde-medio) 1px solid; /* Adicionando uma borda verde */
+}
+.login:hover .login-link {
+  color: var(--verde-medio); /* Mudando a cor do texto para verde quando hover */
 }
 header{
   width: 100%;
