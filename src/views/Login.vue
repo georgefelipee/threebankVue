@@ -17,7 +17,7 @@
             </div>
             <div class="buttons-container">
               <ButtonFIeld type="submit" colorText="black" text="Login"></ButtonFIeld>
-              <button @click="notify" class="signup-button">Sign up</button>
+              <button @click="notifyLoginError" class="signup-button">Sign up</button>
             </div>
           </form>
         </div>
@@ -34,9 +34,9 @@ export default {
 
   name: 'Login',
   methods:{
-      notify(){
-        toast("Login",{
-          type: 'success',
+      notifyLoginError(){
+        toast("User credentials invalid!",{
+          type: 'error',
           position: 'top-right',
           autoClose: 2000
         })

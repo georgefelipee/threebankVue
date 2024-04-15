@@ -19,10 +19,12 @@ export default defineComponent({
        </div>
 
        <div class="login-information">
-         <span class="paragrafo signup"> Sign Up</span>
+         <router-link class="router-link" to="/signup"><span class="paragrafo signup"> Sign Up</span></router-link>
+
 
          <div class="login">
-           <span class="paragrafo login-link"> Login </span>
+           <router-link class="router-link" to="/"><span class="paragrafo login-link"> Login </span></router-link>
+
          </div>
        </div>
 
@@ -32,6 +34,9 @@ export default defineComponent({
 </template>
 
 <style scoped>
+.router-link {
+  text-decoration: none; /* Remove o sublinhado dos links */
+}
 .container-informations{
   display: flex;
   justify-content: center;
