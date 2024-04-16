@@ -26,7 +26,7 @@ export default defineComponent({
   cursor: pointer;
   transition: background-color 0.3s ease;
   display: block;
-  margin: 0 auto; /* Para centralizar o botão horizontalmente */
+ 
 }
 
 .login-button:hover {

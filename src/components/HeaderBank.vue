@@ -24,7 +24,6 @@ export default defineComponent({
 
          <div class="login">
            <router-link class="router-link" to="/"><span class="paragrafo login-link"> Login </span></router-link>
-
          </div>
        </div>
 

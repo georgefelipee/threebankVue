@@ -16,7 +16,9 @@
               <InputField placeholder="Your Password" type="password"></InputField>
             </div>
             <div class="buttons-container">
-              <ButtonFIeld type="submit" colorText="black" text="Login"></ButtonFIeld>
+              <div style="display:flex; justify-content:center">
+                <ButtonFIeld type="submit" colorText="black" text="Login"></ButtonFIeld>
+              </div>
               <button @click="notifyLoginError" class="signup-button">Sign up</button>
             </div>
           </form>
@@ -88,7 +90,8 @@ main{
   flex-direction:column;
   gap:2rem;
   margin-top:3rem;
-  width:100%
+  width:100%;
+  margin-inline:auto;
 }
 .signup-button{
   background-color: #2A2B2A;
