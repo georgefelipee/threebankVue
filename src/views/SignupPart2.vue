@@ -2,9 +2,53 @@
 import {defineComponent} from 'vue'
 import InputField from "@/components/inputField.vue";
 import Button from "primevue/button";
+import type {IBank} from "@/interfaces/IBank";
+import {obtainAgencyByBank, obtainBanks} from "@/http";
+import type {IAgency} from "@/interfaces/IAgency";
+import SelectTypesContainer from "@/components/SelectTypesContainer.vue";
+import SelectTypesInfo from "@/components/SelectTypesInfo.vue";
+
 export default defineComponent({
   name: "SignupPart2",
-  components: {InputField, Button}
+  components: {SelectTypesInfo, SelectTypesContainer, InputField, Button},
+  data() {
+      return {
+        banks: [] as IBank[],
+        agencies: [] as IAgency[],
+        bankSelected: '',
+        agencySelected: '',
+        typeAccountSelected: '',
+
+      }
+  },
+  async created(){
+    this.banks = await obtainBanks();
+    },
+  methods: {
+   async selectedBank(bank: string){
+     this.agencySelected = ''
+      this.bankSelected = bank
+
+      const bankSelected = this.banks.find((bank: IBank) => bank.nameBank === this.bankSelected)
+      if(bankSelected){
+        await this.fetchBankAgencies(bankSelected.id)
+     }
+   },
+   async fetchBankAgencies(bankId: number){
+     try {
+       this.agencies = await obtainAgencyByBank(bankId)
+       console.log(this.agencies)
+      } catch (e) {
+        console.error(e)
+     }
+   },
+    selectedAgency(agency: string){
+      this.agencySelected = agency
+    },
+    selectedType(typeAccount: string){
+      this.typeAccountSelected = typeAccount
+    }
+  }
 })
 </script>
 
@@ -22,8 +66,10 @@ export default defineComponent({
                 <i class="fa fa-university" aria-hidden="true"></i>
                 <v-select
                     label="Select Your Bank"
-                    :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+                    v-model="bankSelected"
+                    :items="banks.map((bank: IBank) => bank.nameBank)"
                     variant="solo"
+                    @update:modelValue="selectedBank"
                 ></v-select>
               </div>
             </div>
@@ -36,8 +82,11 @@ export default defineComponent({
                 <i class="fa fa-money-bill-1" aria-hidden="true"></i>
                 <v-select
                     label="Select your Agency"
-                    :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+                    :items="agencies.map((agency: IAgency) => agency.nameAgency)"
                     variant="solo"
+                    :model-value="agencySelected"
+                    :disabled="!bankSelected"
+                    @update:modelValue="selectedAgency"
                 ></v-select>
               </div>
             </div>
@@ -51,39 +100,25 @@ export default defineComponent({
                 <i class="fa fa-credit-card" aria-hidden="true"></i>
                 <v-select
                     label="Select your Type Account"
-                    :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+                    :items="['Normal Account','Special Account','Premium Account']"
                     variant="solo"
+                    :model-value="typeAccountSelected"
+                    @update:modelValue="selectedType"
+                    :disabled="!bankSelected"
                 ></v-select>
               </div>
             </div>
           </div>
 
         </div>
-        <div class="select-type-container">
-          <div class="select-itens-container">
 
-            <div class="text-container">
-              <p class="type-text">Premium Account</p>
-              <p class="select-text">Select your benefits</p>
-            </div>
-            <div class="benefits-container">
-              <div class="d-flex align-center  ">
-                <label class="select-text" for="benefit1">Benefit 1</label>
-                <div class="d-flex align-center  ">
-                  <v-switch base-color="#04BB69" label="Switch" inset></v-switch>
-                </div>
-              </div>
-              <div class="d-flex align-center  ">
-                <label class="select-text" for="benefit1">Benefit 1</label>
-                <div class="d-flex align-center  ">
-                  <v-switch base-color="#04BB69" label="Switch" inset></v-switch>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <SelectTypesContainer v-if="typeAccountSelected" :type-account-selected="typeAccountSelected" />
+        <SelectTypesInfo v-else/>
+
       </div>
-
+        <div class="proceed-button">
+          <button type="submit">Create Account</button>
+        </div>
     </form>
 
   </div>
@@ -108,6 +143,7 @@ export default defineComponent({
   display: flex;
   gap: 2rem;
   width: 100%;
+  flex-direction:column;
 
 }
 
@@ -146,14 +182,20 @@ export default defineComponent({
   font-size: 1.2rem;
   font-weight: bold;
 }
+.proceed-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
 
 .proceed-button button{
   background-color: #6AF5B7;
-  width: 200px;
+  width: 280px;
   color: black;
   border: none;
   border-radius: 28px;
-  padding: 12px 25px;
+  padding: 18px 40px ;
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -168,48 +210,6 @@ export default defineComponent({
   gap: 2rem;
   width: 100%;
 }
-.select-type-container{
-  width:90%;
-  height:90%;
-  border-radius: 36px;
-  background-color: #FFFAF3;
-}
 
-.select-itens-container{
-  display:flex;
-  flex-direction:column;
-  gap:1.5rem;
-}
-.type-text{
-  color:var(--verde-medio);
-  font-size: 1.8rem;
-  font-weight: bold;
 
-}
-.text-container{
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  margin-inline: 2rem;
-  margin-block: 2rem;
-}
-.select-text{
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #262626;
-}
-
-.benefits-container{
-  display:flex;
-  flex-direction:column;
-  gap:2.5rem;
-  margin:auto;
-}
-.benefit{
-  display:flex;
-  flex-direction:row;
-  gap:3rem;
-  align-items:center;
-  justify-content:space-between;
-}
 </style>

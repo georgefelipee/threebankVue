@@ -30,7 +30,7 @@ export default defineComponent({
       <div v-if="!showSignUpPart2Page" class="signup-container">
         <h1 class="login"> Create account </h1>
 
-        <form @submit.prevent class="signup-form">
+        <form @submit="signUpPart2" class="signup-form">
           <p class="paragrafo-lg">Already have account ?
             <router-link class="router-link" to="/"><span class="paragrafo login-text">Login</span></router-link>
           </p>
@@ -87,7 +87,7 @@ export default defineComponent({
           </div>
 
           <div class="proceed-button">
-            <button>Proceed</button>
+            <button >Proceed</button>
           </div>
 
         </form>
