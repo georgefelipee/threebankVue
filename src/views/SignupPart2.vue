@@ -7,6 +7,7 @@ import {obtainAgencyByBank, obtainBanks} from "@/http";
 import type {IAgency} from "@/interfaces/IAgency";
 import SelectTypesContainer from "@/components/SelectTypesContainer.vue";
 import SelectTypesInfo from "@/components/SelectTypesInfo.vue";
+import { toast} from 'vue3-toastify';
 
 export default defineComponent({
   name: "SignupPart2",
@@ -15,7 +16,7 @@ export default defineComponent({
       return {
         banks: [] as IBank[],
         agencies: [] as IAgency[],
-        bankSelected: '',
+        bankSelected: '' ,
         agencySelected: '',
         typeAccountSelected: '',
 
@@ -29,9 +30,9 @@ export default defineComponent({
      this.agencySelected = ''
       this.bankSelected = bank
 
-      const bankSelected = this.banks.find((bank: IBank) => bank.nameBank === this.bankSelected)
-      if(bankSelected){
-        await this.fetchBankAgencies(bankSelected.id)
+      const bankSelectedFind = this.banks.find((bank: IBank) => bank.nameBank === this.bankSelected)
+      if(bankSelectedFind){
+        await this.fetchBankAgencies(bankSelectedFind.id)
      }
    },
    async fetchBankAgencies(bankId: number){
@@ -47,15 +48,33 @@ export default defineComponent({
     },
     selectedType(typeAccount: string){
       this.typeAccountSelected = typeAccount
+      if(this.typeAccountSelected === 'Normal Account'){
+        this.notifyNormalAccount()
+      }
+    },
+    notifyNormalAccount(){
+      toast("The normal account already has its benefits integrated",{
+        type: 'success',
+        position: 'top-right',
+        autoClose: 5000
+      })
+    },
+    onSubmitForm(){
+      console.log('Form submitted')
+      const bankSelectedFind = this.banks.find((bank: IBank) => bank.nameBank === this.bankSelected)
+      const agencySelectedFind = this.agencies.find((agency: IAgency) => agency.nameAgency === this.agencySelected)
+      console.log('type', this.typeAccountSelected)
     }
-  }
+
+  },
+  emits: ["switchToSignUpPart1"],
 })
 </script>
 
 <template>
   <div class="signup-container-2">
     <h1 class="login"> Bank Information </h1>
-    <form @submit.prevent class="signup-form">
+    <form @submit.prevent @submit="onSubmitForm" class="signup-form">
       <div class="input-and-select-container">
         <div class="inputs-container">
 
@@ -82,6 +101,7 @@ export default defineComponent({
                 <i class="fa fa-money-bill-1" aria-hidden="true"></i>
                 <v-select
                     label="Select your Agency"
+                    aria-required="true"
                     :items="agencies.map((agency: IAgency) => agency.nameAgency)"
                     variant="solo"
                     :model-value="agencySelected"
@@ -117,7 +137,8 @@ export default defineComponent({
 
       </div>
         <div class="proceed-button">
-          <button type="submit">Create Account</button>
+          <button @click="$emit('switchToSignUpPart1')"  class="back-button" type="button">Back</button>
+          <button class="create-button" type="submit">Create Account</button>
         </div>
     </form>
 
@@ -133,7 +154,7 @@ export default defineComponent({
 
 .signup-container-2 {
   display: flex;
-  width: 60%;
+  width: 100%;
   margin-inline: 120px;
   flex-direction: column;
   gap: 1.5rem;
@@ -144,6 +165,8 @@ export default defineComponent({
   gap: 2rem;
   width: 100%;
   flex-direction:column;
+  justify-content:space-around;
+  height: 100%;
 
 }
 
@@ -158,8 +181,8 @@ export default defineComponent({
 .inputs-container {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
-  width: 100%;
+  gap: 1rem;
+  width: 40%;
 }
 
 .input-container{
@@ -184,12 +207,22 @@ export default defineComponent({
 }
 .proceed-button{
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
   margin-top: 2rem;
 }
+.back-button{
+    background-color: #2A2B2A;
+  width: 220px;
+    color: #FFF;
+    border: none;
+    border-radius: 28px;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-.proceed-button button{
+.proceed-button .create-button{
   background-color: #6AF5B7;
   width: 280px;
   color: black;
@@ -200,12 +233,13 @@ export default defineComponent({
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.proceed-button button:hover {
+.proceed-button .create-button:hover {
   background-color: #59d9a5; /* Cor de fundo quando o botão é destacado */
 }
 .input-and-select-container{
   display: flex;
   flex-direction: row;
+  justify-content:space-between;
   align-items: center;
   gap: 2rem;
   width: 100%;

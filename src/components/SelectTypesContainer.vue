@@ -1,6 +1,7 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 
+
 export default defineComponent({
   name: "SelectTypesContainer",
   props: {
@@ -17,10 +18,42 @@ export default defineComponent({
         <p class="type-text">{{ typeAccountSelected }}</p>
         <p class="select-text">Select your benefits</p>
       </div>
-      <div class="benefits-container">
-        <div class="d-flex align-center ga-16 ">
-          <label class="select-text" for="benefit1">Benefit 1</label>
-          <div class="d-flex align-center mt-4">
+
+      <div v-if="typeAccountSelected=='Normal Account' " class="benefits-container">
+        <div class="d-flex align-center justify-content-between w-100 ">
+          <label class="select-text" for="benefit1">Free withdrawals</label>
+          <div class="mt-4">
+            <v-switch
+                :model-value="true"
+                label="on"
+                color="success"
+                base-color="success"
+                v-model="ex11"
+                inset
+                hide-details
+            ></v-switch>
+          </div>
+        </div>
+        <div class="d-flex align-center justify-content-between w-100 ">
+          <label class="select-text" for="benefit1">Free transfer</label>
+          <div class="mt-4">
+            <v-switch
+                :model-value="true"
+                label="on"
+                color="success"
+                base-color="success"
+                inset
+                v-model="ex11"
+                hide-details
+            ></v-switch>
+          </div>
+        </div>
+
+      </div>
+      <div v-if="typeAccountSelected=='Special Account' " class="benefits-container">
+        <div class="d-flex align-center justify-content-between w-100 ">
+          <label class="select-text" for="benefit1">Credit card</label>
+          <div class="mt-4">
             <v-switch
                 :model-value="false"
                 label="on"
@@ -29,22 +62,47 @@ export default defineComponent({
             ></v-switch>
           </div>
         </div>
-        <div class="d-flex align-center  ga-16  ">
-          <label class="select-text" for="benefit1">Benefit 1</label>
-          <div class="d-flex align-center mt-4  ">
-            <v-switch color="success" :model-value="false"  inset></v-switch>
+      </div>
+
+      <div v-if="typeAccountSelected=='Premium Account' " class="benefits-container">
+        <div class="d-flex align-center justify-content-between w-100 ">
+          <label class="select-text" for="benefit1">Credit card</label>
+          <div class="mt-4">
+            <v-switch
+                :model-value="false"
+                label="on"
+                color="success"
+                inset
+            ></v-switch>
           </div>
         </div>
+
+        <div class="d-flex align-center justify-content-between w-100 ">
+          <label class="select-text" for="benefit1">LIS</label>
+          <div class="mt-4">
+            <v-switch
+                :model-value="false"
+                label="on"
+                color="success"
+                inset
+            ></v-switch>
+          </div>
+        </div>
+
       </div>
+
+
+
     </div>
+
   </div>
 </template>
 
 <style scoped>
 
 .select-type-container{
-  width:90%;
-  height:90%;
+  width:40%;
+  height: 400px;
   border-radius: 36px;
   background-color: #FFFAF3;
 }
@@ -75,8 +133,8 @@ export default defineComponent({
 .benefits-container{
   display:flex;
   flex-direction:column;
-  gap:2.5rem;
-  margin:auto;
+  gap:0.5rem;
+  margin-inline: 30px;
 }
 .benefit{
   display:flex;

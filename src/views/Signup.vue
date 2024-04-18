@@ -4,6 +4,9 @@ import ButtonFIeld from "@/components/ButtonFIeld.vue";
 import InputField from "@/components/inputField.vue"
 import Password from 'primevue/password';
 import SignupPart2 from "@/views/SignupPart2.vue";
+import { toast} from 'vue3-toastify';
+import {signUp} from "@/http";
+import type {IUserData} from "@/interfaces/IUserData";
 
 
 export default defineComponent({
@@ -12,13 +15,67 @@ export default defineComponent({
   data() {
       return {
         showSignUpPart2Page: true,
+        userData: {
+          firtsName: "",
+          lastName: "",
+          username: "",
+          email: "",
+          password: "",
+        },
+        confirmPassword: ""
     }
   },
 
   methods: {
-    signUpPart2(){
-      this.showSignUpPart2Page = true;
+    async signUpPart2() {
+      if (this.userData.password !== this.confirmPassword) {
+        toast("The passwords do not match", {
+          type: 'error',
+          position: 'top-right',
+          autoClose: 5000
+        });
+        return;
+      } else {
+        const userData: IUserData = {
+          name: this.userData.firtsName + " " + this.userData.lastName,
+          username: this.userData.username,
+          email: this.userData.email,
+          password: this.userData.password
+        };
+        try {
+          const res = await signUp(userData);
+          console.log(res);
+          if (res.status === 201) {
+            toast("Account created successfully", {
+              type: 'success',
+              position: 'top-right',
+              autoClose: 5000
+            });
+            this.showSignUpPart2Page = !this.showSignUpPart2Page;
+          }
+          if(res.status === 400) {
+            const errorMsgJson = await res.json();
+            const errorMsg = errorMsgJson.msg;
+            toast("Error creating account: " + errorMsg, {
+              type: 'error',
+              position: 'top-right',
+              autoClose: 5000
+            });
+          }
+        } catch (error) {
+          console.error(error); // Log the error to console for debugging
+          toast("Error creating account", {
+            type: 'error',
+            position: 'top-right',
+            autoClose: 5000
+          });
+        }
+      }
     }
+    ,
+   backToSignUpPart1(){
+     this.showSignUpPart2Page = !this.showSignUpPart2Page;
+   }
   }
 })
 </script>
@@ -29,71 +86,73 @@ export default defineComponent({
 
       <div v-if="!showSignUpPart2Page" class="signup-container">
         <h1 class="login"> Create account </h1>
+        <KeepAlive>
+          <form @submit.prevent  @submit="signUpPart2" class="signup-form">
+            <p class="paragrafo-lg">Already have account ?
+              <router-link class="router-link" to="/"><span class="paragrafo login-text">Login</span></router-link>
+            </p>
 
-        <form @submit="signUpPart2" class="signup-form">
-          <p class="paragrafo-lg">Already have account ?
-            <router-link class="router-link" to="/"><span class="paragrafo login-text">Login</span></router-link>
-          </p>
+            <div class="inputs-container">
 
-          <div class="inputs-container">
+              <div class="input-container">
+                <div class="label-with-input">
+                  <p class="label-input">First Name</p>
+                  <div class="icon-input">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <input required  v-model="userData.firtsName" placeholder="First Name" type="text">
+                  </div>
+                </div>
 
-            <div class="input-container">
-              <div class="label-with-input">
-                <p class="label-input">First Name</p>
-                <div class="icon-input">
-                  <i class="fa fa-user" aria-hidden="true"></i>
-                  <InputField placeholder="First Name" type="text"></InputField>
+                <div class="label-with-input">
+                  <p class="second-label-input">Last Name</p>
+                  <input required v-model="userData.lastName" placeholder="Last Name" type="text">
                 </div>
               </div>
 
-              <div class="label-with-input">
-                <p class="second-label-input">Last Name</p>
-                <InputField placeholder="Last Name" type="text"></InputField>
-              </div>
-            </div>
+              <div class="input-container">
 
-            <div class="input-container">
-
-              <div class="label-with-input">
-                <p class="label-input">Username</p>
-                <div class="icon-input">
-                  <i class="fa fa-user" aria-hidden="true"></i>
-                  <InputField placeholder="Username" type="text"></InputField>
+                <div class="label-with-input">
+                  <p class="label-input">Username</p>
+                  <div class="icon-input">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <input required v-model="userData.username" placeholder="Username" type="text">
+                  </div>
                 </div>
-              </div>
 
-              <div class="label-with-input">
-                <p class="second-label-input">Email</p>
-                <InputField placeholder="Email" type="email"></InputField>
-              </div>
-
-            </div>
-            <div class="input-container">
-
-              <div class="label-with-input">
-                <p class="label-input">Password</p>
-                <div class="icon-input">
-                  <i class="fa fa-lock" aria-hidden="true"></i>
-                  <InputField placeholder="Password" type="password"></InputField>
+                <div class="label-with-input">
+                  <p class="second-label-input">Email</p>
+                  <input required v-model="userData.email" placeholder="Email" type="email">
                 </div>
-              </div>
 
-              <div class="label-with-input">
-                <p class="second-label-input">Confirm Password</p>
-                <InputField placeholder="Confirm Password" type="password"></InputField>
               </div>
+              <div class="input-container">
 
+                <div class="label-with-input">
+                  <p class="label-input">Password</p>
+                  <div class="icon-input">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                    <input required v-model="userData.password" placeholder="Password" type="password">
+                  </div>
+                </div>
+
+                <div class="label-with-input">
+                  <p class="second-label-input">Confirm Password</p>
+                  <input required v-model="confirmPassword" placeholder="Confirm Password" type="password">
+                </div>
+
+              </div>
             </div>
-          </div>
 
-          <div class="proceed-button">
-            <button >Proceed</button>
-          </div>
+            <div class="proceed-button">
+              <button>Proceed</button>
+            </div>
 
-        </form>
+          </form>
+
+        </KeepAlive>
 
       </div>
-      <SignupPart2 v-else></SignupPart2>
+      <SignupPart2 @switchToSignUpPart1="backToSignUpPart1" showSignUpPart2Page v-else></SignupPart2>
 
     </div>
   </main>
@@ -140,26 +199,20 @@ main {
   flex-direction: column;
 }
 
-.buttons-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-top: 3rem;
-  width: 100%
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 18px;
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
 }
 
-.signup-button {
-  background-color: #2A2B2A;
-  width: 80%;
-  color: #FFF;
-  border: none;
-  border-radius: 28px;
-  padding: 12px 24px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: block;
-  margin: 0 auto; /* Para centralizar o botão horizontalmente */
+input:focus {
+  border-color: #007bff; /* Cor da borda quando o campo está em foco */
 }
 
 .icon-input {

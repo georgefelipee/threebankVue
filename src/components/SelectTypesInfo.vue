@@ -35,12 +35,12 @@ export default defineComponent({
           </template>
           <v-carousel-item
           >
-            <div class="d-flex align-center flex-column ga-7">
+            <div class="d-flex align-center flex-column ga-4">
               <div>
                 <p class="select-text">Normal Account</p>
               </div>
               <div>
-                  <ul>
+                  <ul class="d-flex align-center flex-column ga-3">
                     <li class="text-benefits">Free withdrawals</li>
                     <li class="text-benefits">Free transfer</li>
                   </ul>
@@ -55,7 +55,7 @@ export default defineComponent({
                 <p class="select-text">Special Account</p>
               </div>
               <div>
-                <ul class="d-flex flex-column ga-3">
+                <ul class="d-flex align-center flex-column ga-3">
                   <li class="text-benefits">Credit card</li>
                   <li class="text-benefits">Credit card balance </li>
                 </ul>
@@ -70,7 +70,7 @@ export default defineComponent({
                 <p class="select-text">Premium Account</p>
               </div>
               <div>
-                <ul class="d-flex flex-column ga-3">
+                <ul class="d-flex align-center flex-column ga-3">
                   <li class="text-benefits">Have LIS</li>
                   <li class="text-benefits">LIS balance </li>
                 </ul>
@@ -90,7 +90,7 @@ export default defineComponent({
 <style scoped>
 
 .select-type-container{
-  width:100%;
+  width:40%;
   height:90%;
   border-radius: 36px;
   background-color: #FFFAF3;

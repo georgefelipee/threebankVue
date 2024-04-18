@@ -4,13 +4,13 @@ export default {
   name: 'InputField',
   props: {
     placeholder: {type: String},
-    type: {type: String, default: 'text'}
+    type: {type: String, default: 'text'},
   }
 }
 </script>
 
 <template>
-<input required :placeholder="placeholder" :type="type">
+<input  required :placeholder="placeholder" :type="type">
 </template>
 
 <style scoped>
