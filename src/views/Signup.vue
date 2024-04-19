@@ -4,7 +4,7 @@ import ButtonFIeld from "@/components/ButtonFIeld.vue";
 import InputField from "@/components/inputField.vue"
 import Password from 'primevue/password';
 import SignupPart2 from "@/views/SignupPart2.vue";
-import { toast} from 'vue3-toastify';
+import {toast} from 'vue3-toastify';
 import {signUp} from "@/http";
 import type {IUserData} from "@/interfaces/IUserData";
 
@@ -25,7 +25,6 @@ export default defineComponent({
         confirmPassword: ""
     }
   },
-
   methods: {
     async signUpPart2() {
       if (this.userData.password !== this.confirmPassword) {
@@ -36,47 +35,52 @@ export default defineComponent({
         });
         return;
       } else {
+        const isStrongPassword = this.isStrongPassword(this.userData.password);
+        if (!isStrongPassword) {
+          toast("Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character", {
+            type: 'error',
+            position: 'top-right',
+            autoClose: 5000
+          });
+          return;
+        }
         const userData: IUserData = {
           name: this.userData.firtsName + " " + this.userData.lastName,
           username: this.userData.username,
           email: this.userData.email,
           password: this.userData.password
         };
-        try {
           const res = await signUp(userData);
-          console.log(res);
+          const resJson = await res.json();
+          console.log(resJson);
           if (res.status === 201) {
             toast("Account created successfully", {
               type: 'success',
               position: 'top-right',
               autoClose: 5000
             });
+            localStorage.setItem('userData', JSON.stringify(resJson));
             this.showSignUpPart2Page = !this.showSignUpPart2Page;
+
           }
           if(res.status === 400) {
-            const errorMsgJson = await res.json();
-            const errorMsg = errorMsgJson.msg;
+            const errorMsg = resJson.msg;
             toast("Error creating account: " + errorMsg, {
               type: 'error',
               position: 'top-right',
               autoClose: 5000
             });
           }
-        } catch (error) {
-          console.error(error); // Log the error to console for debugging
-          toast("Error creating account", {
-            type: 'error',
-            position: 'top-right',
-            autoClose: 5000
-          });
-        }
       }
     }
     ,
    backToSignUpPart1(){
      this.showSignUpPart2Page = !this.showSignUpPart2Page;
-   }
-  }
+   },
+    isStrongPassword(password:string) : boolean {
+         return /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/.test(password);
+    },
+}
 })
 </script>
 

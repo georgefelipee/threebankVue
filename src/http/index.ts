@@ -1,6 +1,7 @@
 import type {IBank} from "@/interfaces/IBank";
 import type {IAgency} from "@/interfaces/IAgency";
 import type {IUserData} from "@/interfaces/IUserData";
+import type {ICreateAccount} from "@/interfaces/ICreateAccount";
 
 var urlApi = "http://localhost:8080/"
 
@@ -18,17 +19,22 @@ export async  function obtainAgencyByBank(bank_id: number){
 }
 
 export async function signUp(userData: IUserData) {
-    try {
-        const res = await fetch(urlApi + 'users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData),
-        });
-        const data = await res ; // Parse response body as JSON
-        return data;
-    } catch (error) {
-        throw new Error('Error registering user');
-    }
+    // Parse response body as JSON
+    return await fetch(urlApi + 'users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData),
+    });
+}
+
+export async function createBankAccount(ICreateAccount: ICreateAccount ) {
+    return await fetch(urlApi + 'accounts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ICreateAccount),
+    });
 }

@@ -1,13 +1,15 @@
 <script lang="ts">
-import {defineComponent} from 'vue'
+import {defineComponent, type PropType} from 'vue'
 import InputField from "@/components/inputField.vue";
 import Button from "primevue/button";
 import type {IBank} from "@/interfaces/IBank";
-import {obtainAgencyByBank, obtainBanks} from "@/http";
+import {createBankAccount, obtainAgencyByBank, obtainBanks} from "@/http";
 import type {IAgency} from "@/interfaces/IAgency";
 import SelectTypesContainer from "@/components/SelectTypesContainer.vue";
 import SelectTypesInfo from "@/components/SelectTypesInfo.vue";
 import { toast} from 'vue3-toastify';
+import type {IUserData} from "@/interfaces/IUserData";
+import type {ICreateAccount} from "@/interfaces/ICreateAccount";
 
 export default defineComponent({
   name: "SignupPart2",
@@ -19,7 +21,8 @@ export default defineComponent({
         bankSelected: '' ,
         agencySelected: '',
         typeAccountSelected: '',
-
+        hasLis: false,
+        hasCreditCard: false,
       }
   },
   async created(){
@@ -48,6 +51,8 @@ export default defineComponent({
     },
     selectedType(typeAccount: string){
       this.typeAccountSelected = typeAccount
+      this.hasCreditCard = false
+
       if(this.typeAccountSelected === 'Normal Account'){
         this.notifyNormalAccount()
       }
@@ -59,11 +64,54 @@ export default defineComponent({
         autoClose: 5000
       })
     },
-    onSubmitForm(){
+    onSwitchCreditCard(){
+      this.hasCreditCard = !this.hasCreditCard
+      console.log('hasCreditCard', this.hasCreditCard)
+    },
+    onSwitchLIS(){
+      this.hasLis = !this.hasLis
+      console.log('hasLis', this.hasLis)
+    },
+   async onSubmitForm(){
       console.log('Form submitted')
       const bankSelectedFind = this.banks.find((bank: IBank) => bank.nameBank === this.bankSelected)
       const agencySelectedFind = this.agencies.find((agency: IAgency) => agency.nameAgency === this.agencySelected)
-      console.log('type', this.typeAccountSelected)
+       const user: IUserData = JSON.parse(await localStorage.getItem('userData') || '{}')
+
+      if(agencySelectedFind){
+        let typeAccount = undefined
+        if(this.typeAccountSelected== 'Normal Account'){
+            typeAccount = 0
+        } else if(this.typeAccountSelected== 'Special Account'){
+            typeAccount = 1
+        } else if (this.typeAccountSelected == 'Premium Account') {
+            typeAccount = 2
+        }
+        const account: ICreateAccount = {
+          user_id: user.id,
+          agency_id: agencySelectedFind.id,
+          accountType: typeAccount,
+          hasLis: this.hasLis,
+          hasCreditCard: this.hasCreditCard
+        }
+        console.log('account', account)
+         const createAccountRes = await createBankAccount(account)
+         const createAccountResJson = await createAccountRes.json()
+        console.log(createAccountResJson)
+        if(createAccountRes.status === 201){
+          toast("Account created successfully", {
+            type: 'success',
+            position: 'top-right',
+            autoClose: 5000
+          });
+        } else {
+          toast("Error creating account", {
+            type: 'error',
+            position: 'top-right',
+            autoClose: 5000
+          });
+        }
+      }
     }
 
   },
@@ -132,7 +180,7 @@ export default defineComponent({
 
         </div>
 
-        <SelectTypesContainer v-if="typeAccountSelected" :type-account-selected="typeAccountSelected" />
+        <SelectTypesContainer :has-l-i-s="hasLis" :has-credit-card="hasCreditCard" @switchCreditCard="onSwitchCreditCard" @switchLIS="onSwitchLIS" v-if="typeAccountSelected" :type-account-selected="typeAccountSelected" />
         <SelectTypesInfo v-else/>
 
       </div>

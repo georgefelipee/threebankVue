@@ -5,8 +5,19 @@ import {defineComponent} from 'vue'
 export default defineComponent({
   name: "SelectTypesContainer",
   props: {
-    typeAccountSelected: {type: String, required: true}
-  }
+    typeAccountSelected: {type: String, required: true},
+    hasCreditCard: {type: Boolean, required: true},
+    hasLIS: {type: Boolean, required: true},
+  },
+  methods: {
+    switchCreditCardSelect(){
+      this.$emit('switchCreditCard')
+    },
+    switchLIS(){
+      this.$emit('switchLIS')
+    }
+  },
+  emits:[ 'switchCreditCard', 'switchLIS'],
 })
 </script>
 
@@ -55,9 +66,10 @@ export default defineComponent({
           <label class="select-text" for="benefit1">Credit card</label>
           <div class="mt-4">
             <v-switch
-                :model-value="false"
                 label="on"
                 color="success"
+                :v-model="hasCreditCard"
+                @update:model-value="switchCreditCardSelect"
                 inset
             ></v-switch>
           </div>
@@ -69,9 +81,10 @@ export default defineComponent({
           <label class="select-text" for="benefit1">Credit card</label>
           <div class="mt-4">
             <v-switch
-                :model-value="false"
                 label="on"
                 color="success"
+                :v-model="hasCreditCard"
+                @update:model-value="switchCreditCardSelect"
                 inset
             ></v-switch>
           </div>
@@ -81,7 +94,8 @@ export default defineComponent({
           <label class="select-text" for="benefit1">LIS</label>
           <div class="mt-4">
             <v-switch
-                :model-value="false"
+                :v-model="hasLIS"
+                @update:model-value="switchLIS"
                 label="on"
                 color="success"
                 inset

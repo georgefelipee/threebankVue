@@ -4,16 +4,16 @@
       <div class="background-img">
         <div class="login-container" >
           <h1 class="login"> Login </h1>
-          <form @submit.prevent class="login-form">
+          <form @submit.prevent @submit="login" class="login-form">
             <p class="paragrafo boas-vindas">Welcome back! Please log in to access your account.</p>
 
             <div class="icon-input">
               <i class="fa fa-user" aria-hidden="true"></i>
-              <InputField  placeholder="Email or Username" type="text"></InputField>
+              <input v-model="emailOrUsername" required  placeholder="Email or Username" type="text">
             </div>
             <div class="icon-input">
               <i class="fa fa-lock" aria-hidden="true"></i>
-              <InputField placeholder="Your Password" type="password"></InputField>
+              <input v-model="password" required placeholder="Your Password" type="password">
             </div>
             <div class="buttons-container">
               <div style="display:flex; justify-content:center">
@@ -30,11 +30,18 @@
 import InputField from "@/components/inputField.vue";
 import ButtonFIeld from "@/components/ButtonFIeld.vue";
 import { toast, type ToastOptions } from 'vue3-toastify';
+import axios from '@/http/axios.ts'
 
 export default {
   components: {ButtonFIeld, InputField},
 
   name: 'Login',
+  data() {
+      return {
+          emailOrUsername: '',
+          password: ''
+      }
+  },
   methods:{
       notifyLoginError(){
         toast("User credentials invalid!",{
@@ -42,11 +49,52 @@ export default {
           position: 'top-right',
           autoClose: 2000
         })
+      },
+      emailOrUsernameTratament() : Object{
+        if(this.emailOrUsername.includes('@')){
+          return {
+            email: this.emailOrUsername,
+            password: this.password
+          }
+        }
+        return{
+          username: this.emailOrUsername,
+          password: this.password
+        }
+      },
+    async login(){
+      const loginData = this.emailOrUsernameTratament()
+      try {
+        const {data} = await axios.post('users/login', loginData)
+        console.log(data)
+      } catch (error) {
+        const errorMsg = error?.response?.data?.msg
+        toast(errorMsg || 'An error occurred',{
+          type: 'error',
+          position: 'bottom-center',
+          autoClose: 4000
+        })
       }
+    }
   }
 }
 </script>
 <style scoped>
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 18px;
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #007bff; /* Cor da borda quando o campo está em foco */
+}
 .background-img{
   background-image: url('../../public/background.png');
   background-size: cover; /* para ajustar a imagem ao tamanho do elemento */
