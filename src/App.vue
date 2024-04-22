@@ -5,7 +5,6 @@ import Login from "@/views/Login.vue";
 </script>
 
 <template>
-  <HeaderBank/>
   <router-view/>
 </template>
 

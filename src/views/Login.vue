@@ -1,6 +1,6 @@
 <template>
+  <HeaderBank/>
     <main>
-
       <div class="background-img">
         <div class="login-container" >
           <h1 class="login"> Login </h1>
@@ -19,9 +19,11 @@
               <div style="display:flex; justify-content:center">
                 <ButtonFIeld type="submit" colorText="black" text="Login"></ButtonFIeld>
               </div>
-              <button @click="notifyLoginError" class="signup-button">Sign up</button>
             </div>
           </form>
+          <router-link class="signup-button" to="/signup">
+            <button>Sign up</button>
+          </router-link>
         </div>
       </div>
     </main>
@@ -30,11 +32,12 @@
 import InputField from "@/components/inputField.vue";
 import ButtonFIeld from "@/components/ButtonFIeld.vue";
 import { toast, type ToastOptions } from 'vue3-toastify';
-import axios from '@/http/axios.ts'
+import axios from '@/http/axios'
+import {useAuthStore} from '@/store/auth.ts'
+import HeaderBank from "@/components/HeaderBank.vue";
 
 export default {
-  components: {ButtonFIeld, InputField},
-
+  components: {HeaderBank, ButtonFIeld, InputField},
   name: 'Login',
   data() {
       return {
@@ -64,11 +67,14 @@ export default {
       },
     async login(){
       const loginData = this.emailOrUsernameTratament()
+      const authStore = useAuthStore()
       try {
         const {data} = await axios.post('users/login', loginData)
         console.log(data)
+        authStore.setToken(data.token)
       } catch (error) {
-        const errorMsg = error?.response?.data?.msg
+        console.log(error)
+        const errorMsg = error?.response?.data?.message
         toast(errorMsg || 'An error occurred',{
           type: 'error',
           position: 'bottom-center',
@@ -97,14 +103,16 @@ input:focus {
 }
 .background-img{
   background-image: url('../../public/background.png');
-  background-size: cover; /* para ajustar a imagem ao tamanho do elemento */
-  background-position: center; /* para centralizar a imagem */
-  width: 75vw; /* largura total da janela de visualização */
-  height: 80vh; /* altura total da janela de visualização */
+  background-size: cover;
+  background-position: center;
+  width: 80%;
   display: flex;
-  justify-content: center; /* centraliza o conteúdo horizontalmente */
+  height: 85%;
+  margin-bottom: 3rem;
+  justify-content: center;
   border-radius: 30px;
-  outline: none; /* Adicione essa linha para remover qualquer borda padrão */
+  outline: none;
+  padding-bottom: 2.2rem;
 }
 main{
   display: flex;
@@ -153,6 +161,8 @@ main{
   transition: background-color 0.3s ease;
   display: block;
   margin: 0 auto; /* Para centralizar o botão horizontalmente */
+  margin-top:0.6rem;
+  text-align:center;
 }
 .icon-input{
   display:flex;

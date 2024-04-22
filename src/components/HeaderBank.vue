@@ -13,6 +13,7 @@ export default defineComponent({
        <img src="@/assets/images/logo-three.png" alt="logo ">
 
        <div class="utils-link">
+         <router-link to="/dashboard" >Dashboard</router-link>
          <span class="paragrafo">Home</span>
          <span class="paragrafo">Home</span>
          <span class="paragrafo">Home</span>

@@ -72,11 +72,38 @@ export default defineComponent({
       this.hasLis = !this.hasLis
       console.log('hasLis', this.hasLis)
     },
+    verifyFiels(){
+      console.log('entrou')
+       if(!this.bankSelected){
+         toast("Select a bank", {
+           type: 'error',
+           position: 'top-right',
+           autoClose: 5000
+         });
+         return false
+       } else if(!this.agencySelected){
+         toast("Select an agency", {
+           type: 'error',
+           position: 'top-right',
+           autoClose: 5000
+         });
+         return false
+       } else if(!this.typeAccountSelected){
+         toast("Select a type account", {
+           type: 'error',
+           position: 'top-right',
+           autoClose: 5000
+         });
+         return false
+       }
+    },
    async onSubmitForm(){
       console.log('Form submitted')
       const bankSelectedFind = this.banks.find((bank: IBank) => bank.nameBank === this.bankSelected)
+
       const agencySelectedFind = this.agencies.find((agency: IAgency) => agency.nameAgency === this.agencySelected)
        const user: IUserData = JSON.parse(await localStorage.getItem('userData') || '{}')
+      this.verifyFiels()
 
       if(agencySelectedFind){
         let typeAccount = undefined
@@ -87,6 +114,7 @@ export default defineComponent({
         } else if (this.typeAccountSelected == 'Premium Account') {
             typeAccount = 2
         }
+
         const account: ICreateAccount = {
           user_id: user.id,
           agency_id: agencySelectedFind.id,
@@ -132,6 +160,7 @@ export default defineComponent({
               <div class="icon-input">
                 <i class="fa fa-university" aria-hidden="true"></i>
                 <v-select
+                    aria-required="true"
                     label="Select Your Bank"
                     v-model="bankSelected"
                     :items="banks.map((bank: IBank) => bank.nameBank)"
@@ -215,7 +244,7 @@ export default defineComponent({
   flex-direction:column;
   justify-content:space-around;
   height: 100%;
-
+  margin-bottom: 2.5rem;
 }
 
 .icon-input {

@@ -20,6 +20,7 @@ import Password from 'primevue/password';
 
 import 'vue3-toastify/dist/index.css';
 import Button from "primevue/button";
+import {createPinia} from "pinia";
 
 const vuetify = createVuetify({
     components,
@@ -27,6 +28,10 @@ const vuetify = createVuetify({
 })
 
 const app = createApp(App)
+const pinia = createPinia()
+
+app.use(pinia)
+
 app.use(PrimeVue, {ripple: true})
 app.component('Button', Button);
 app.component('Password', Password);

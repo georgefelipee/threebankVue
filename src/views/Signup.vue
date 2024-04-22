@@ -7,11 +7,11 @@ import SignupPart2 from "@/views/SignupPart2.vue";
 import {toast} from 'vue3-toastify';
 import {signUp} from "@/http";
 import type {IUserData} from "@/interfaces/IUserData";
-
+import HeaderBank from '@/components/HeaderBank.vue';
 
 export default defineComponent({
   name: "Sign up",
-  components: {SignupPart2, InputField, ButtonFIeld, Password},
+  components: {SignupPart2, InputField, ButtonFIeld, Password,HeaderBank},
   data() {
       return {
         showSignUpPart2Page: true,
@@ -85,6 +85,7 @@ export default defineComponent({
 </script>
 
 <template>
+  <HeaderBank/>
   <main>
     <div class="background-img">
 
@@ -168,11 +169,9 @@ export default defineComponent({
   background-size: cover; /* para ajustar a imagem ao tamanho do elemento */
   background-position: center; /* para centralizar a imagem */
   width: 75vw; /* largura total da janela de visualização */
-  height: 100vh; /* altura total da janela de visualização */
   display: flex;
-  justify-content: flex-start; /* centraliza o conteúdo horizontalmente */
+  margin-bottom: 3rem;
   border-radius: 30px;
-  margin-bottom:20px;
   outline: none; /* Adicione essa linha para remover qualquer borda padrão */
 }
 
@@ -194,13 +193,14 @@ main {
   width: 40%;
   margin-inline: 120px;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.6rem;
 }
 
 .signup-form {
   display: flex;
   gap: 2rem;
   flex-direction: column;
+  margin-bottom: 2rem;
 }
 
 input {
@@ -232,18 +232,6 @@ input:focus {
   flex-direction: column;
   gap: 3rem;
   width: 100%;
-}
-
-.inputs-wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  gap: 1rem;
-
-}
-
-.signup-button:hover {
-  background-color: #525552;
 }
 
 .router-link {
