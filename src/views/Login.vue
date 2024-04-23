@@ -76,7 +76,7 @@ export default {
         this.$router.push('/dashboard')
       } catch (error) {
         console.log(error)
-        const errorMsg = error?.response?.data?.message
+        const errorMsg = error?.response?.data?.msg
         toast(errorMsg || 'An error occurred',{
           type: 'error',
           position: 'bottom-center',
@@ -176,4 +176,16 @@ main{
 .signup-button:hover {
   background-color: #525552;
 }
+@media (max-width: 580px) {
+  .boas-vindas{
+    font-size: 14px; /* Altere o tamanho da fonte conforme desejado */
+  }
+}
+@media (max-width: 480px) {
+  .background-img{
+    width: 90%;
+  }
+}
+
+
 </style>

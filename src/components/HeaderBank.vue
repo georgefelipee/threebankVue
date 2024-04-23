@@ -10,14 +10,7 @@ export default defineComponent({
  <header>
    <div class="container-informations">
      <div class="informations">
-       <img src="@/assets/images/logo-three.png" alt="logo ">
-
-       <div class="utils-link">
-         <router-link to="/dashboard" >Dashboard</router-link>
-         <span class="paragrafo">Home</span>
-         <span class="paragrafo">Home</span>
-         <span class="paragrafo">Home</span>
-       </div>
+       <img src="@/assets/images/logo-three.png" alt="logo">
 
        <div class="login-information">
          <router-link class="router-link" to="/signup"><span class="paragrafo signup"> Sign Up</span></router-link>
@@ -46,7 +39,7 @@ export default defineComponent({
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
+  width: 95%;
   border: 2px var(--verde-medio) solid;
   border-radius: 100px;
   padding: 1rem;
@@ -103,5 +96,11 @@ header{
 
 span{
   color: black;
+}
+
+@media (max-width: 480px) {
+.informations img{
+  width:100px
+}
 }
 </style>

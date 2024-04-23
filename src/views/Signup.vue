@@ -288,4 +288,11 @@ input:focus {
 .proceed-button button:hover {
   background-color: #59d9a5; /* Cor de fundo quando o botão é destacado */
 }
+@media (max-width: 1100px) {
+  .background-img{
+    width:90vw;
+  }
+
+}
+
 </style>

@@ -321,6 +321,16 @@ export default defineComponent({
   gap: 2rem;
   width: 100%;
 }
+@media (max-width: 1100px) {
+  .background-img{
+    width:90vw;
+  }
+
+  .signup-container-2{
+    margin-inline: 49px;
+
+  }
+}
 
 
 </style>
