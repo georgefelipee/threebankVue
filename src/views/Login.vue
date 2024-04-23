@@ -72,6 +72,8 @@ export default {
         const {data} = await axios.post('users/login', loginData)
         console.log(data)
         authStore.setToken(data.token)
+        authStore.setIsAuth(true)
+        this.$router.push('/dashboard')
       } catch (error) {
         console.log(error)
         const errorMsg = error?.response?.data?.message
