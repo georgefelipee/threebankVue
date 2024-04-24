@@ -73,6 +73,8 @@ export default {
         console.log(data)
         authStore.setToken(data.token)
         authStore.setIsAuth(true)
+        console.log(data.user)
+        authStore.setUser( data.user )
         this.$router.push('/dashboard')
       } catch (error) {
         console.log(error)

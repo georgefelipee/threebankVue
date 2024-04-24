@@ -51,7 +51,8 @@ if(localStorage.getItem('token')){
         try {
             auth.setIsAuth(true)
           const user =  await auth.checkToken()
-            auth.setUser(JSON.stringify(user))
+            auth.setUser(user)
+            console.log(user)
         } catch (error) {
             console.log(error)
             auth.setIsAuth(false)

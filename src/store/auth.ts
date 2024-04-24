@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import {ref} from "vue";
 import axios from "@/http/axios";
 import router from '../router/index'
+import type {IUserData} from "@/interfaces/IUserData";
 
 export const useAuthStore = defineStore('useAuthStore',()=> {
     const token = ref(localStorage.getItem('token'))
@@ -12,9 +13,11 @@ export const useAuthStore = defineStore('useAuthStore',()=> {
         localStorage.setItem('token', tokenValue)
         token.value = tokenValue
     }
-    function setUser(userValue: string) {
-        localStorage.setItem('user', userValue)
+
+    function setUser(userValue) {
+        localStorage.setItem('user', JSON.stringify(userValue) )
         user.value = userValue
+        console.log(userValue)
     }
 
     function setIsAuth(auth: boolean) {
@@ -29,7 +32,6 @@ export const useAuthStore = defineStore('useAuthStore',()=> {
                     Authorization: tokenAuth
                 }
             })
-            setUser(JSON.stringify(data) )
             return data
         } catch (error) {
             clear()
@@ -50,6 +52,7 @@ export const useAuthStore = defineStore('useAuthStore',()=> {
         setToken,
         setUser,
         token,
+        user,
         checkToken,
         clear,
         setIsAuth,

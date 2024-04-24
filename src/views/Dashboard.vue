@@ -2,10 +2,11 @@
 import {defineComponent} from 'vue'
 import SideBar from '../components/SideBar.vue'
 import {sidebarWidth} from "@/store/sideBarStore";
+import HeaderDashboard from "@/components/HeaderDashboard.vue";
 
 export default defineComponent({
   name: "Dashboard",
-  components: {SideBar},
+  components: {HeaderDashboard, SideBar},
   setup() {
     return {
       sidebarWidth
@@ -29,6 +30,7 @@ export default defineComponent({
     <div>
       <SideBar></SideBar>
       <div :style="{ 'margin-left': sidebarWidth}" >
+        <HeaderDashboard/>
         <router-view></router-view>
       </div>
     </div>
